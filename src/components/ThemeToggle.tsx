@@ -1,15 +1,22 @@
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useSound } from '@/contexts/SoundContext';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
+  const { playToggle } = useSound();
+  
+  const handleToggle = () => {
+    playToggle();
+    toggleTheme();
+  };
   
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <button
-          onClick={toggleTheme}
+          onClick={handleToggle}
           className="p-2 rounded-lg transition-all border border-transparent hover:border-primary/20 hover:bg-primary/10 focus-glow"
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >

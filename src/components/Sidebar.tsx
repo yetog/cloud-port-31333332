@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Menu, User, AppWindow, FolderOpen, Briefcase, FileText, Mail as MailIcon, Github, Linkedin, Twitter } from 'lucide-react';
+import { Menu, User, AppWindow, FolderOpen, Briefcase, FileText, Mail as MailIcon, Github, Linkedin, Twitter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import SoundToggle from './SoundToggle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useSound } from '@/contexts/SoundContext';
+import { useSidebarContext } from '@/contexts/SidebarContext';
 
 interface NavLink {
   name: string;
@@ -16,6 +18,10 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
+  const { playClick, playToggle } = useSound();
+  const { isCollapsed, toggleCollapse } = useSidebarContext();
+
+  const isHomePage = location.pathname === '/';
 
   const navLinks: NavLink[] = [
     { name: 'About', href: '#about', icon: <User size={20} /> },
@@ -57,39 +63,61 @@ const Sidebar = () => {
     };
   }, []);
 
+  const handleCollapseToggle = () => {
+    playToggle();
+    toggleCollapse();
+  };
+
+  const handleMobileMenuToggle = () => {
+    playToggle();
+    setIsOpen(!isOpen);
+  };
+
   const NavItem = ({ link }: { link: NavLink }) => {
     const isActive = link.isRoute 
       ? location.pathname === link.href
       : activeSection === link.href.substring(1);
     
+    // For hash links, prefix with "/" if not on home page
+    const getHref = () => {
+      if (link.isRoute) return link.href;
+      return isHomePage ? link.href : `/${link.href}`;
+    };
+
+    const handleClick = () => {
+      playClick();
+      setIsOpen(false);
+    };
+    
     const linkContent = (
       <div
-        className={`flex items-center justify-center md:justify-start gap-3 p-3 rounded-lg transition-all cursor-pointer hover-lift
+        className={`flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer hover-lift
+                  ${isCollapsed ? 'justify-center' : 'justify-start'}
                   ${isActive 
                     ? 'bg-primary/20 text-primary border border-primary/40' 
                     : 'text-muted-foreground hover:bg-primary/10 hover:text-foreground border border-transparent'}`}
         style={isActive ? { boxShadow: '0 0 15px hsl(var(--primary) / 0.2)' } : {}}
       >
         <span className="flex-shrink-0">{link.icon}</span>
-        <span className="hidden md:block">{link.name}</span>
+        {!isCollapsed && <span className="hidden md:block">{link.name}</span>}
       </div>
     );
 
-    // Wrap in tooltip for mobile collapsed view
+    // Wrap in tooltip for collapsed view
     const tooltipWrapped = (
       <Tooltip>
         <TooltipTrigger asChild>
           {link.isRoute ? (
-            <Link to={link.href} onClick={() => setIsOpen(false)}>
+            <Link to={link.href} onClick={handleClick}>
               {linkContent}
             </Link>
           ) : (
-            <a href={link.href} onClick={() => setIsOpen(false)}>
+            <a href={getHref()} onClick={handleClick}>
               {linkContent}
             </a>
           )}
         </TooltipTrigger>
-        <TooltipContent side="right" className="md:hidden">
+        <TooltipContent side="right" className={isCollapsed ? '' : 'md:hidden'}>
           {link.name}
         </TooltipContent>
       </Tooltip>
@@ -103,7 +131,7 @@ const Sidebar = () => {
       {/* Mobile Menu Button */}
       <div className="fixed top-4 right-4 z-50 md:hidden">
         <button 
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleMobileMenuToggle}
           className="p-2 ff7-panel"
           aria-label="Toggle menu"
         >
@@ -113,27 +141,45 @@ const Sidebar = () => {
       
       {/* Sidebar */}
       <aside 
-        className={`fixed z-40 h-screen backdrop-blur-lg border-r transition-transform duration-300 
-                   w-16 md:w-64 left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+        className={`fixed z-40 h-screen backdrop-blur-lg border-r transition-all duration-300 
+                   ${isCollapsed ? 'w-16' : 'w-64'} left-0 
+                   ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
         style={{
           background: 'hsl(var(--card) / 0.95)',
           borderColor: 'hsl(var(--primary) / 0.2)',
         }}
       >
+        {/* Collapse Toggle Button - Desktop Only */}
+        <button
+          onClick={handleCollapseToggle}
+          className="hidden md:flex absolute -right-3 top-20 w-6 h-6 bg-card border border-primary/30 rounded-full items-center justify-center hover:bg-primary/20 transition-colors z-50"
+          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight size={14} className="text-primary" />
+          ) : (
+            <ChevronLeft size={14} className="text-primary" />
+          )}
+        </button>
+
         <div className="flex flex-col h-full p-4">
           {/* Branding */}
-          <div className="mb-8 text-center">
-            <Link to="/" className="block">
-              <h2 className="font-bold text-lg md:text-xl tracking-tight hidden md:block text-foreground text-glow hover:text-primary transition-colors">
-                Isayah Young-Burke
-              </h2>
-              <div className="w-10 h-10 mx-auto rounded-lg bg-primary/20 flex items-center justify-center md:hidden">
+          <div className={`mb-8 text-center ${isCollapsed ? 'px-0' : ''}`}>
+            <Link to="/" className="block" onClick={() => playClick()}>
+              {!isCollapsed ? (
+                <>
+                  <h2 className="font-bold text-lg md:text-xl tracking-tight hidden md:block text-foreground text-glow hover:text-primary transition-colors">
+                    Isayah Young-Burke
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-1 hidden md:block">
+                    Infrastructure & Cloud Consultant
+                  </p>
+                </>
+              ) : null}
+              <div className={`w-10 h-10 mx-auto rounded-lg bg-primary/20 flex items-center justify-center ${isCollapsed ? '' : 'md:hidden'}`}>
                 <span className="text-primary font-bold text-lg">IY</span>
               </div>
             </Link>
-            <p className="text-xs text-muted-foreground mt-1 hidden md:block">
-              Infrastructure & Cloud Consultant
-            </p>
           </div>
           
           {/* Navigation */}
@@ -149,7 +195,7 @@ const Sidebar = () => {
           <div className="h-px bg-border/50 my-4" />
           
           {/* Social Links */}
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div className={`flex items-center justify-center gap-3 mb-4 ${isCollapsed ? 'flex-col' : ''}`}>
             {socialLinks.map((link) => (
               <Tooltip key={link.name}>
                 <TooltipTrigger asChild>
@@ -159,11 +205,12 @@ const Sidebar = () => {
                     rel="noopener noreferrer"
                     className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                     aria-label={link.name}
+                    onClick={() => playClick()}
                   >
                     {link.icon}
                   </a>
                 </TooltipTrigger>
-                <TooltipContent side="top">
+                <TooltipContent side={isCollapsed ? 'right' : 'top'}>
                   {link.name}
                 </TooltipContent>
               </Tooltip>
@@ -171,17 +218,19 @@ const Sidebar = () => {
           </div>
           
           {/* Theme and Sound Toggles */}
-          <div className="flex items-center justify-center gap-2 mb-4">
+          <div className={`flex items-center justify-center gap-2 mb-4 ${isCollapsed ? 'flex-col' : ''}`}>
             <ThemeToggle />
             <SoundToggle />
           </div>
           
           {/* Copyright */}
-          <div className="mt-auto text-center hidden md:block">
-            <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} Isayah Young-Burke
-            </p>
-          </div>
+          {!isCollapsed && (
+            <div className="mt-auto text-center hidden md:block">
+              <p className="text-xs text-muted-foreground">
+                &copy; {new Date().getFullYear()} Isayah Young-Burke
+              </p>
+            </div>
+          )}
         </div>
       </aside>
     </>
