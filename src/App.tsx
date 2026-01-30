@@ -11,6 +11,8 @@ import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import ProjectDetail from "./pages/ProjectDetail";
 import Apps from "./pages/Apps";
+import Services from "./pages/Services";
+import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/apps" element={<Apps />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/blog" element={<Blog />} />
                   <Route path="/projects/:projectId" element={<ProjectDetail />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
