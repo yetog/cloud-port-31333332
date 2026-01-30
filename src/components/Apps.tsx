@@ -1,6 +1,9 @@
-
 import { apps } from '../data/apps';
-import { ExternalLink, Download, Github, ArrowRight } from 'lucide-react';
+import { 
+  ExternalLink, Download, Github, ArrowRight,
+  GraduationCap, Leaf, Music, Bot, Mic, BrainCircuit,
+  Headphones, PenLine, Gamepad2, Palette, BookOpen
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +14,20 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { FF7Panel, SectionHeader } from './rpg';
+
+const iconMap: Record<string, React.ElementType> = {
+  GraduationCap,
+  Leaf,
+  Music,
+  Bot,
+  Mic,
+  BrainCircuit,
+  Headphones,
+  PenLine,
+  Gamepad2,
+  Palette,
+  BookOpen,
+};
 
 const Apps = () => {
   const featuredApps = apps.slice(0, 5);
@@ -56,7 +73,17 @@ const Apps = () => {
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <FF7Panel className="h-full hover-lift">
-                    <h3 className="text-lg font-bold mb-2 text-foreground">{app.title}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      {iconMap[app.icon] && (
+                        <span className="text-primary">
+                          {(() => {
+                            const IconComponent = iconMap[app.icon];
+                            return <IconComponent className="h-5 w-5" />;
+                          })()}
+                        </span>
+                      )}
+                      <h3 className="text-lg font-bold text-foreground">{app.title}</h3>
+                    </div>
                     <p className="text-sm text-muted-foreground mb-4 flex-1">{app.description}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {app.tags.map(tag => (

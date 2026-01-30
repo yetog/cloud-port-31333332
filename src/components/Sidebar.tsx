@@ -1,7 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
+import SoundToggle from './SoundToggle';
 
 interface NavLink {
   name: string;
@@ -121,6 +122,12 @@ const Sidebar = () => {
               })}
             </ul>
           </nav>
+          
+          {/* Theme and Sound Toggles */}
+          <div className="flex items-center justify-center gap-2 mb-4 md:justify-start">
+            <ThemeToggle />
+            <SoundToggle />
+          </div>
           
           <div className="mt-auto text-center hidden md:block">
             <p className="text-xs text-muted-foreground">
