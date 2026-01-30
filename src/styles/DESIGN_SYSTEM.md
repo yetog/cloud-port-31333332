@@ -1,7 +1,7 @@
 # RPG UI Design System
 ## FF7R-Inspired Gaming Interface Language
 
-**Purpose**: A portable design system specification for the portfolio that enables consistent FF7R/Matrix-inspired aesthetics.
+**Purpose**: A portable design system specification for the portfolio that enables consistent FF7R/Cyberpunk-inspired aesthetics.
 
 **Last Updated**: January 2026
 
@@ -11,7 +11,7 @@
 
 ### Core Inspiration
 - **Final Fantasy VII Remake**: Status screens, materia slots, equipment panels
-- **The Matrix**: Neon green on black, digital rain, terminal aesthetics
+- **Cyberpunk Aesthetic**: Royal purple on black, neon glows, futuristic vibes
 - **Modern Gaming UIs**: Duolingo gamification, progression systems
 
 ### Target Emotions
@@ -28,8 +28,8 @@ All colors are defined in `src/index.css` as CSS variables.
 ### Dark Theme (Default)
 ```css
 :root {
-  /* Primary: Matrix Green */
-  --primary: 142 76% 45%;
+  /* Primary: Royal Purple */
+  --primary: 270 70% 55%;
   --primary-foreground: 0 0% 100%;
   
   /* Background: Deep Black */
@@ -44,10 +44,13 @@ All colors are defined in `src/index.css` as CSS variables.
   --muted: 0 0% 12%;
   --muted-foreground: 0 0% 60%;
   
+  /* Accent: Lighter purple */
+  --accent-foreground: 270 70% 65%;
+  
   /* Extended Palette */
   --gold: 45 93% 47%;
   --warning: 38 92% 50%;
-  --success: 142 76% 45%;
+  --success: 142 76% 45%;  /* Keep green for success states */
   --destructive: 0 72% 51%;
 }
 ```
@@ -59,10 +62,11 @@ All colors are defined in `src/index.css` as CSS variables.
   --foreground: 0 0% 10%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 10%;
-  --primary: 142 76% 36%; /* Darker for contrast */
+  --primary: 270 70% 45%; /* Darker purple for contrast */
+  --accent-foreground: 270 70% 45%;
   --muted: 0 0% 92%;
   --muted-foreground: 0 0% 40%;
-  --border: 142 76% 36% / 0.15;
+  --border: 270 70% 45% / 0.15;
   --gold: 45 93% 40%;
 }
 ```

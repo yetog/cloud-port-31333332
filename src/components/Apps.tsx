@@ -69,7 +69,7 @@ const Apps = () => {
               {featuredApps.map((app, index) => (
                 <CarouselItem
                   key={app.id}
-                  className="basis-full md:basis-1/3 lg:basis-1/4 p-2"
+                  className="basis-full sm:basis-[calc(50%-0.5rem)] md:basis-[calc(33.333%-0.667rem)] lg:basis-[calc(25%-0.75rem)]"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <FF7Panel className="h-full hover-lift">
