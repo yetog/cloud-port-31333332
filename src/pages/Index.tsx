@@ -10,7 +10,7 @@ import FloatingParticles from '../components/FloatingParticles';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-grid-animated relative">
+    <div className="min-h-screen flex flex-col md:flex-row bg-grid-animated relative overflow-x-hidden">
       {/* Floating Particles Background */}
       <FloatingParticles />
       

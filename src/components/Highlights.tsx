@@ -85,8 +85,10 @@ const Highlights = () => {
           <Carousel
             setApi={setApi}
             opts={{
-              align: 'center',
+              align: 'start',
               loop: true,
+              skipSnaps: false,
+              dragFree: false,
             }}
             plugins={[
               Autoplay({
@@ -95,7 +97,7 @@ const Highlights = () => {
                 stopOnMouseEnter: true,
               }),
             ]}
-            className="w-full"
+            className="w-full overflow-hidden"
           >
             <CarouselContent>
               {highlights.map((highlight) => {
@@ -104,7 +106,7 @@ const Highlights = () => {
                 return (
                   <CarouselItem 
                     key={highlight.id} 
-                    className="basis-full md:basis-[calc(50%-0.5rem)]"
+                    className="basis-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.667rem)]"
                   >
                     <FF7Panel className="h-full hover-lift group">
                       {/* Image with Ken Burns effect */}
