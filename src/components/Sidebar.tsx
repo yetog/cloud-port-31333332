@@ -63,8 +63,8 @@ const Sidebar = () => {
       
       {/* Sidebar */}
       <aside 
-        className={`fixed z-40 h-screen backdrop-blur-lg border-r transition-all duration-300 
-                   w-16 md:w-64 ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
+        className={`fixed z-40 h-screen backdrop-blur-lg border-r transition-transform duration-300 
+                   w-16 md:w-64 left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
         style={{
           background: 'hsl(var(--card) / 0.95)',
           borderColor: 'hsl(var(--primary) / 0.2)',
