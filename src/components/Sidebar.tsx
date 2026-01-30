@@ -7,7 +7,7 @@ interface NavLink {
   name: string;
   href: string;
   icon?: React.ReactNode;
-  isRoute?: boolean; // For router links vs hash links
+  isRoute?: boolean;
 }
 
 const Sidebar = () => {
@@ -22,7 +22,6 @@ const Sidebar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
-  // Handle intersection observer for scroll spy
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
     
@@ -54,22 +53,30 @@ const Sidebar = () => {
       <div className="fixed top-4 right-4 z-50 md:hidden">
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 glass-panel"
+          className="p-2 ff7-panel"
           aria-label="Toggle menu"
         >
-          <Menu size={24} />
+          <Menu size={24} className="text-primary" />
         </button>
       </div>
       
-      {/* Sidebar - desktop & tablet shown by default, mobile shown when isOpen */}
+      {/* Sidebar */}
       <aside 
-        className={`fixed z-40 h-screen bg-apple-black/90 backdrop-blur-lg border-r border-white/10 transition-all duration-300 
-                   w-16 md:w-64 text-white ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
+        className={`fixed z-40 h-screen backdrop-blur-lg border-r transition-all duration-300 
+                   w-16 md:w-64 ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
+        style={{
+          background: 'hsl(var(--card) / 0.95)',
+          borderColor: 'hsl(var(--primary) / 0.2)',
+        }}
       >
         <div className="flex flex-col h-full p-4">
           <div className="mb-8 text-center">
-            <h2 className="font-bold text-lg md:text-xl tracking-tight hidden md:block">Isayah Young-Burke</h2>
-            <p className="text-xs text-gray-400 mt-1 hidden md:block">Infrastructure & Cloud Consultant</p>
+            <h2 className="font-bold text-lg md:text-xl tracking-tight hidden md:block text-foreground text-glow">
+              Isayah Young-Burke
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1 hidden md:block">
+              Infrastructure & Cloud Consultant
+            </p>
           </div>
           
           <nav className="flex-1">
@@ -81,10 +88,11 @@ const Sidebar = () => {
                 
                 const linkElement = (
                   <div
-                    className={`flex items-center justify-center md:justify-start p-3 rounded-lg transition-colors cursor-pointer
+                    className={`flex items-center justify-center md:justify-start p-3 rounded-lg transition-all cursor-pointer hover-lift
                               ${isActive 
-                                ? 'bg-white/20 text-white' 
-                                : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                                ? 'bg-primary/20 text-primary border border-primary/40' 
+                                : 'text-muted-foreground hover:bg-primary/10 hover:text-foreground border border-transparent'}`}
+                    style={isActive ? { boxShadow: '0 0 15px hsl(var(--primary) / 0.2)' } : {}}
                   >
                     {link.icon && <span className="mr-3">{link.icon}</span>}
                     <span className="hidden md:block">{link.name}</span>
@@ -115,7 +123,7 @@ const Sidebar = () => {
           </nav>
           
           <div className="mt-auto text-center hidden md:block">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-muted-foreground">
               &copy; {new Date().getFullYear()} Isayah Young-Burke
             </p>
           </div>

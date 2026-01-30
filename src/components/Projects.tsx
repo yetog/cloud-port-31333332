@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/carousel";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import PasswordModal from './PasswordModal';
+import { FF7Panel } from './rpg';
 
-// Project category types and their corresponding icons
 const categoryIcons = {
   cloud: <Cloud className="h-5 w-5" />,
   webhosting: <Globe className="h-5 w-5" />,
@@ -40,14 +40,10 @@ const Projects = () => {
     demoUrl: null
   });
 
-  // Get unique categories from projects
   const categories = [...new Set(projects.map(project => project.category))];
-
-  // Filter projects based on active category
   const filteredProjects = projects.filter(project => project.category === activeCategory);
 
   useEffect(() => {
-    // Delay to coordinate with animations if desired
     const timer = setTimeout(() => setLoaded(true), 300);
     return () => clearTimeout(timer);
   }, [activeCategory]);
@@ -64,18 +60,17 @@ const Projects = () => {
     if (passwordModal.demoUrl && passwordModal.demoUrl !== '#') {
       window.open(passwordModal.demoUrl, '_blank');
     } else {
-      // Scroll to contact section if no demo URL
       document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <section id="projects" className="py-20 md:py-28 bg-secondary/50">
+    <section id="projects" className="py-20 md:py-28 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="section-title">Projects</h2>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
+            <h2 className="section-title text-glow">Projects</h2>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-warning/20 text-warning text-sm border border-warning/30">
               <Construction className="h-4 w-4" />
               Under Maintenance
             </div>
@@ -90,11 +85,12 @@ const Projects = () => {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all border ${
                   activeCategory === category
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary hover:bg-secondary/80 text-muted-foreground'
+                    ? 'bg-primary/20 text-primary border-primary/40'
+                    : 'bg-secondary/50 hover:bg-secondary text-muted-foreground border-transparent hover:border-primary/20'
                 }`}
+                style={activeCategory === category ? { boxShadow: '0 0 15px hsl(var(--primary) / 0.2)' } : {}}
               >
                 {categoryIcons[category as keyof typeof categoryIcons]}
                 {categoryTitles[category as keyof typeof categoryTitles]}
@@ -118,55 +114,57 @@ const Projects = () => {
                   className="basis-full md:basis-1/2 p-2"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div 
-                    className={`glass-panel p-6 h-full transition-all duration-700 ${
+                  <FF7Panel 
+                    className={`h-full transition-all duration-700 hover-lift ${
                       loaded ? 'opacity-100 transform-none' : 'opacity-0 translate-y-8'
                     }`}
                   >
                     {/* Project Image */}
-                    <div className="mb-4">
+                    <div className="mb-4 rounded-lg overflow-hidden border border-primary/20">
                       <AspectRatio ratio={16 / 9}>
                         <img
                           src={project.image}
                           alt={project.title}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover"
                           loading="lazy"
                         />
                       </AspectRatio>
                     </div>
                     
                     <div className="flex items-center gap-2 mb-2">
-                      {categoryIcons[project.category as keyof typeof categoryIcons]}
+                      <span className="text-primary">
+                        {categoryIcons[project.category as keyof typeof categoryIcons]}
+                      </span>
                       <span className="text-sm text-muted-foreground">
                         {categoryTitles[project.category as keyof typeof categoryTitles]}
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <h3 className="text-xl font-bold mb-2 text-foreground">{project.title}</h3>
                     <p className="text-muted-foreground mb-4">{project.description}</p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
                       {project.tags.map(tag => (
                         <span
                           key={tag}
-                          className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary-foreground"
+                          className="text-xs px-2 py-1 rounded-full bg-primary/20 text-primary border border-primary/30"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
                     
-                    <div className="flex gap-4 mt-4">
+                    <div className="flex gap-4 mt-4 pt-4 border-t border-primary/20">
                       <Link
                         to={`/projects/${project.id}`}
-                        className="flex items-center text-sm text-primary hover:underline"
+                        className="flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
                       >
                         <ExternalLink size={16} className="mr-1" />
                         View Details
                       </Link>
                       <button
                         onClick={() => handleDemoClick(project)}
-                        className="flex items-center text-sm text-primary hover:underline"
+                        className="flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
                       >
                         <ExternalLink size={16} className="mr-1" />
                         🔐 View Demo
@@ -174,7 +172,7 @@ const Projects = () => {
                       {project.codeUrl && (
                         <a
                           href={project.codeUrl}
-                          className="flex items-center text-sm text-primary hover:underline"
+                          className="flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -183,13 +181,13 @@ const Projects = () => {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </FF7Panel>
                 </CarouselItem>
               ))}
             </CarouselContent>
             <div className="flex justify-center mt-6">
-              <CarouselPrevious className="static translate-y-0 mr-4" />
-              <CarouselNext className="static translate-y-0" />
+              <CarouselPrevious className="static translate-y-0 mr-4 border-primary/40 hover:border-primary hover:bg-primary/10" />
+              <CarouselNext className="static translate-y-0 border-primary/40 hover:border-primary hover:bg-primary/10" />
             </div>
           </Carousel>
         </div>
