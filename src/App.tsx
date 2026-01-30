@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SoundProvider } from "@/contexts/SoundContext";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 import PageLoader from "@/components/PageLoader";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
@@ -21,7 +22,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <SoundProvider>
-        <TooltipProvider>
+        <SidebarProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -39,7 +41,8 @@ const App = () => (
               </PageTransition>
             </Suspense>
           </BrowserRouter>
-        </TooltipProvider>
+          </TooltipProvider>
+        </SidebarProvider>
       </SoundProvider>
     </ThemeProvider>
   </QueryClientProvider>
