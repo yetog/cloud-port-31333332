@@ -97,14 +97,14 @@ const Highlights = () => {
             ]}
             className="w-full"
           >
-            <CarouselContent className="-ml-2 md:-ml-4">
+            <CarouselContent>
               {highlights.map((highlight) => {
                 const IconComponent = iconMap[highlight.icon] || Award;
                 
                 return (
                   <CarouselItem 
                     key={highlight.id} 
-                    className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/2"
+                    className="basis-full md:basis-[calc(50%-0.5rem)]"
                   >
                     <FF7Panel className="h-full hover-lift group">
                       {/* Image with Ken Burns effect */}

@@ -156,7 +156,7 @@ const Projects = () => {
               {filteredProjects.map((project, index) => (
                 <CarouselItem 
                   key={project.id} 
-                  className="basis-full md:basis-1/2 p-2"
+                  className="basis-full md:basis-[calc(50%-0.5rem)]"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <FF7Panel 
