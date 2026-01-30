@@ -1,210 +1,189 @@
 
-# Carousel Alignment & Purple Color Refactor Plan
-
-## Overview
-
-This plan addresses two main requests:
-1. **Fix carousel width/alignment** for perfect desktop and mobile experiences
-2. **Refactor color scheme** from Matrix green to a sophisticated purple/black aesthetic
+# Carousel & Sidebar Fixes Plan
+## Fixing Cut-off Issues and UI Polish
 
 ---
 
-## Part 1: Carousel Alignment Issues
+## Issues Identified from Screenshots
 
-### Current Problems Identified
+### 1. Highlights Carousel Problems
+Looking at your screenshot, the highlights carousel has several issues:
+- **Left card cut-off**: The first card on the left is partially visible/clipped
+- **Right card cut-off**: Same issue on the right side
+- **Cards not aligned to container edges**: Unlike Apps carousel which aligns perfectly
 
-**Highlights Carousel (`Highlights.tsx`):**
-- Uses `-ml-2 md:-ml-4` offset that may cause misalignment
-- `basis-full md:basis-1/2 lg:basis-1/2` shows 2 items on desktop but could be better aligned
-- Cards don't fill container width evenly
+**Root Cause**: The Highlights carousel uses `align: 'center'` which shows partial cards at edges. The Apps carousel uses `align: 'start'` which keeps cards within bounds.
 
-**Projects Carousel (`Projects.tsx`):**
-- `basis-full md:basis-1/2` combined with `p-2` padding creates uneven spacing
-- No explicit gap management between slides
+### 2. Sidebar Cut-off
+The sidebar shows a thin sliver visible on mobile when it should be completely hidden.
 
-**Apps Carousel (`Apps.tsx`):**
-- `basis-full md:basis-1/3 lg:basis-1/4` on small cards
-- Same offset/padding issues
+**Root Cause**: The `-left-full` positioning doesn't fully hide the 64px (w-16) sidebar, causing a visible edge.
 
-**Base Carousel Component (`carousel.tsx`):**
-- Uses `-ml-4` on CarouselContent and `pl-4` on CarouselItem
-- This offset approach can cause first/last item alignment issues
+---
 
-### Solution: Consistent Carousel Spacing
+## Solution 1: Fix Highlights Carousel
 
-**Strategy:** Use a consistent gap-based approach across all carousels with proper container alignment.
+### Changes to `src/components/Highlights.tsx`:
 
-**Changes to `src/components/ui/carousel.tsx`:**
-- Update CarouselContent to use configurable gap classes
-- Remove hardcoded `-ml-4` offset, use container padding instead
+**Problem**: Using `align: 'center'` + `basis-[calc(50%-0.5rem)]` causes clipping
 
-**Changes to each carousel component:**
-- Highlights: Show 1 on mobile, 2 on tablet/desktop with proper gaps
-- Projects: Show 1 on mobile, 2 on desktop with equal card sizes
-- Apps: Show 1 on mobile, 2 on tablet, 3-4 on desktop
+**Fix**:
+1. Change from `align: 'center'` to `align: 'start'` to match Apps carousel behavior
+2. Update responsive breakpoints to match Apps pattern
+3. Add proper container padding to prevent edge clipping
+4. Ensure cards fill container properly without overflow
 
-**Responsive Breakpoints:**
 ```text
-Mobile (<768px): Single card, full width
-Tablet (768-1024px): 2 cards
-Desktop (>1024px): 2-3 cards depending on carousel
+Current (Broken):
+- opts={{ align: 'center', loop: true }}
+- className="basis-full md:basis-[calc(50%-0.5rem)]"
+
+Fixed (Like Apps):
+- opts={{ align: 'start', loop: true, skipSnaps: false, dragFree: false }}
+- className="basis-full md:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.667rem)]"
+- Add overflow-hidden to container
 ```
+
+**Additional Fixes**:
+- Add `overflow-hidden` class to the Carousel wrapper
+- Ensure the container has proper padding that matches card gaps
+- Show 1 card mobile, 2 cards tablet, 3 cards desktop (like a middle ground)
 
 ---
 
-## Part 2: Purple/Black Color Refactor
+## Solution 2: Fix Sidebar Cut-off
 
-### Proposed Color Palette
+### Changes to `src/components/Sidebar.tsx`:
 
-**Current (Matrix Green):**
-- Primary: `142 76% 45%` (HSL) = `#22c55e` (vibrant green)
+**Problem**: `-left-full` doesn't fully hide a `w-16` element
 
-**New (Royal Purple/Violet):**
-- Primary: `270 70% 55%` (HSL) = `#9333ea` (vibrant purple)
-- Or softer: `265 85% 65%` = `#a855f7` (lavender-purple)
-- Alternative: `280 80% 50%` = `#a21caf` (magenta-purple)
+**Fix**: Use more aggressive hiding with transform or proper left calculation
 
-### Purple Options for Your Consideration
+```text
+Current (Shows sliver):
+className="w-16 md:w-64 ${isOpen ? 'left-0' : '-left-full md:left-0'}"
 
-| Option | HSL | Hex | Vibe |
-|--------|-----|-----|------|
-| **Royal Purple** | `270 70% 55%` | `#9333ea` | Deep, regal, professional |
-| **Violet** | `265 85% 65%` | `#a855f7` | Softer, more approachable |
-| **Magenta-Purple** | `280 80% 50%` | `#a21caf` | Bold, energetic |
-| **Indigo-Purple** | `260 70% 50%` | `#7c3aed` | Tech-forward, modern |
+Fixed Options:
+Option A: Use transform instead
+className="w-16 md:w-64 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}"
 
-**My recommendation:** **Royal Purple (`270 70% 55%`)** - it's professional, maintains the FF7R gaming aesthetic (think Sephiroth vibes), and provides excellent contrast on dark backgrounds.
-
-### Files to Update
-
-**1. `src/index.css` - Color Variables:**
-```css
-:root {
-  /* RPG Dark Theme - Purple/Black */
-  --primary: 270 70% 55%;           /* Royal Purple */
-  --primary-foreground: 0 0% 100%;
-  --accent-foreground: 270 70% 65%; /* Lighter purple */
-  --border: 270 70% 55% / 0.2;
-  --ring: 270 70% 55%;
-  --success: 142 76% 45%;           /* Keep green for success states */
-}
-
-:root.light {
-  --primary: 270 70% 45%;           /* Darker purple for light mode */
-  --accent-foreground: 270 70% 45%;
-  --border: 270 70% 45% / 0.15;
-  --ring: 270 70% 45%;
-}
+Option B: Calculate proper left offset  
+className="w-16 md:w-64 ${isOpen ? 'left-0' : '-left-16 md:left-0'}"
 ```
 
-**2. `tailwind.config.ts`:**
-- No changes needed (uses CSS variables)
-
-**3. `src/styles/DESIGN_SYSTEM.md`:**
-- Update color documentation to reflect purple palette
-- Update "Matrix-inspired" references to "Cyberpunk/RPG-inspired"
-
-### Visual Impact
-
-Since all components use `hsl(var(--primary))`, the color change will cascade automatically to:
-- Panel borders and glows (`.ff7-panel`)
-- Text highlights and accents
-- Buttons and interactive elements
-- Progress bars and materia indicators
-- Background grid animation
-- Floating particles
+**Recommended**: Option A (transform-based) is smoother and more reliable.
 
 ---
 
-## Implementation Summary
+## Solution 3: Additional Improvements
 
-### Files to Modify (6):
+### 3a. Main Content Mobile Offset
+The main content needs to account for sidebar properly:
 
-1. **`src/index.css`**
-   - Update primary color from green to purple (both themes)
-   - Update related accent colors
+```text
+Current in Index.tsx:
+<main className="flex-1 md:ml-64 relative z-10">
 
-2. **`src/components/ui/carousel.tsx`**
-   - Improve gap/spacing handling
-   - Better container alignment
+Issue: On mobile, when sidebar is hidden, main should have ml-0
+Fix: Already correct with md: prefix, but verify no overflow
+```
 
-3. **`src/components/Highlights.tsx`**
-   - Fix carousel item basis/padding for perfect alignment
-   - Ensure consistent card widths
+### 3b. Improve Highlights Card Styling
+Match the Apps cards more closely:
+- Ensure consistent padding inside FF7Panel
+- Add min-height to prevent inconsistent card heights
+- Improve image aspect ratio handling
 
-4. **`src/components/Projects.tsx`**
-   - Fix carousel spacing and alignment
-   - Ensure cards fill space evenly
-
-5. **`src/components/Apps.tsx`**
-   - Fix carousel spacing and alignment
-   - Better responsive breakpoints
-
-6. **`src/styles/DESIGN_SYSTEM.md`**
-   - Update color documentation
-   - Update design philosophy references
+### 3c. Carousel Navigation Buttons
+Currently buttons use `static` positioning which works, but could add padding around carousel to prevent edge clipping.
 
 ---
 
-## Technical Details
+## Files to Modify
 
-### Carousel Alignment Fix
+### 1. `src/components/Highlights.tsx`
+- Change carousel alignment from 'center' to 'start'
+- Update responsive basis classes
+- Add container padding/overflow handling
+- Improve card layout consistency
 
-**Before (Current):**
-```tsx
-// CarouselContent
-className="-ml-4"
+### 2. `src/components/Sidebar.tsx`
+- Switch from `left-*` positioning to `translate-x` for mobile hide/show
+- Ensure proper z-index to prevent bleed-through
 
-// CarouselItem  
-className="pl-4 basis-full md:basis-1/2"
-```
-
-**After (Fixed):**
-```tsx
-// CarouselContent - remove negative margin, add gap
-className="gap-4"
-
-// CarouselItem - remove padding, use flex-basis only
-className="basis-full md:basis-[calc(50%-0.5rem)] lg:basis-[calc(50%-0.5rem)]"
-```
-
-### Color Change CSS
-
-**Dark Theme Primary:**
-```css
---primary: 270 70% 55%;  /* Purple */
-```
-
-**Light Theme Primary:**
-```css
---primary: 270 70% 45%;  /* Darker purple for contrast */
-```
+### 3. `src/pages/Index.tsx` (minor)
+- Add overflow-hidden to main content wrapper if needed
 
 ---
 
-## Before/After Preview
+## Technical Implementation Details
 
-### Current (Green Theme):
-- Primary color: Vibrant Matrix green (#22c55e)
-- Panel borders: Green glow
-- Text accents: Green highlights
+### Highlights Carousel Fix
 
-### After (Purple Theme):
-- Primary color: Royal purple (#9333ea)
-- Panel borders: Purple glow
-- Text accents: Purple highlights
-- Same FF7R aesthetic, different color personality
+```text
+Before:
+<Carousel
+  opts={{
+    align: 'center',  // Causes clipping
+    loop: true,
+  }}
+  ...
+>
+  <CarouselContent>
+    <CarouselItem className="basis-full md:basis-[calc(50%-0.5rem)]">
+
+After:
+<Carousel
+  opts={{
+    align: 'start',   // Keeps cards in bounds
+    loop: true,
+    skipSnaps: false,
+    dragFree: false,
+  }}
+  ...
+>
+  <CarouselContent className="-ml-4">  // Offset for gaps
+    <CarouselItem className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+```
+
+The key insight: The Apps carousel works because:
+1. Uses `align: 'start'` not `center`
+2. Has proper responsive breakpoints
+3. Container and items have matching gap/padding
+
+### Sidebar Transform Fix
+
+```text
+Before:
+className={`... ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
+
+After:
+className={`... left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+```
+
+Using `translate-x` instead of `left` provides:
+- Hardware-accelerated animation
+- Precise element hiding (no partial visibility)
+- Smoother transitions
 
 ---
 
-## Preserved Elements
+## Summary of Changes
 
-Everything else stays the same:
-- FF7R panel styling and glassmorphism
-- Animation system (pulse-glow, float, transitions)
-- Sound effects system
-- Theme toggle functionality
-- All content and structure
-- Materia indicators and progress bars (will use purple)
-- Gold accent color for achievements
+| File | Change | Purpose |
+|------|--------|---------|
+| `Highlights.tsx` | Change align to 'start', update basis classes | Fix card clipping |
+| `Highlights.tsx` | Add proper gap handling with -ml-4 / pl-4 pattern | Match Apps carousel |
+| `Sidebar.tsx` | Use translate-x instead of left positioning | Fix mobile cutoff |
+| `Index.tsx` | Add overflow-x-hidden if needed | Prevent horizontal scroll |
 
+---
+
+## Expected Results
+
+After implementation:
+- **Highlights carousel**: Cards align perfectly within container bounds, no clipping on edges
+- **Sidebar**: Completely hidden on mobile when closed, no visible sliver
+- **Consistent UX**: Highlights will behave like Apps carousel (which you said looks great)
+- **Mobile**: Clean full-width cards with smooth navigation
+- **Desktop**: 2-3 cards visible with proper spacing between them
