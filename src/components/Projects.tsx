@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { projects } from '../data/projects';
-import { ExternalLink, Code, Cloud, Globe, Image as ImageIcon, Headphones, Construction } from 'lucide-react';
+import { ExternalLink, Code, Cloud, Globe, Image as ImageIcon, Headphones, Construction, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   Carousel,
@@ -8,7 +8,9 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  type CarouselApi,
 } from "@/components/ui/carousel";
+import Autoplay from 'embla-carousel-autoplay';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import PasswordModal from './PasswordModal';
 import { FF7Panel } from './rpg';
@@ -30,6 +32,9 @@ const categoryTitles = {
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('cloud');
   const [loaded, setLoaded] = useState(false);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   const [passwordModal, setPasswordModal] = useState<{
     isOpen: boolean;
     projectTitle: string;
@@ -44,6 +49,22 @@ const Projects = () => {
   const filteredProjects = projects.filter(project => project.category === activeCategory);
 
   useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  const scrollTo = useCallback((index: number) => {
+    api?.scrollTo(index);
+  }, [api]);
+
+  useEffect(() => {
+    setLoaded(false);
     const timer = setTimeout(() => setLoaded(true), 300);
     return () => clearTimeout(timer);
   }, [activeCategory]);
@@ -98,13 +119,37 @@ const Projects = () => {
             ))}
           </div>
 
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mb-6">
+            {Array.from({ length: count }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === current 
+                    ? 'w-6 bg-primary' 
+                    : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                }`}
+                aria-label={`Go to project ${index + 1}`}
+              />
+            ))}
+          </div>
+
           <Carousel
+            setApi={setApi}
             opts={{
               align: "start",
               loop: true,
               skipSnaps: false,
               dragFree: false,
             }}
+            plugins={[
+              Autoplay({
+                delay: 6000,
+                stopOnInteraction: true,
+                stopOnMouseEnter: true,
+              }),
+            ]}
             className="w-full"
           >
             <CarouselContent>
@@ -166,8 +211,8 @@ const Projects = () => {
                         onClick={() => handleDemoClick(project)}
                         className="flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
                       >
-                        <ExternalLink size={16} className="mr-1" />
-                        🔐 View Demo
+                        <Lock size={14} className="mr-1" />
+                        View Demo
                       </button>
                       {project.codeUrl && (
                         <a

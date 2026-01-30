@@ -56,8 +56,8 @@ const PasswordModal = ({ isOpen, onClose, onSuccess, projectTitle }: PasswordMod
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Lock className="h-5 w-5" />
-            🔐 Demo Access Required
+            <Lock className="h-5 w-5 text-primary" />
+            Demo Access Required
           </DialogTitle>
           <DialogDescription>
             Enter the password to view the demo for "{projectTitle}"
@@ -79,15 +79,15 @@ const PasswordModal = ({ isOpen, onClose, onSuccess, projectTitle }: PasswordMod
           </form>
 
           {attempts > 0 && !showLinkedIn && (
-            <p className="text-sm text-red-500 text-center">
-              ❌ Incorrect password. {attempts >= 2 ? 'Maximum attempts reached.' : `${3 - attempts} attempts remaining.`}
+            <p className="text-sm text-destructive text-center">
+              Incorrect password. {attempts >= 2 ? 'Maximum attempts reached.' : `${3 - attempts} attempts remaining.`}
             </p>
           )}
 
           {showLinkedIn && (
-            <div className="border-t pt-4 space-y-3">
+            <div className="border-t border-border pt-4 space-y-3">
               <p className="text-sm text-muted-foreground text-center">
-                📧 Need access? Connect with me on LinkedIn to request the demo password.
+                Need access? Connect with me on LinkedIn to request the demo password.
               </p>
               <Button 
                 variant="outline" 

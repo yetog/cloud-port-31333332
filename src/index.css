@@ -33,6 +33,34 @@
     --success: 142 76% 45%;
   }
 
+  /* Light Theme */
+  :root.light {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 142 76% 36%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 142 76% 36% / 0.15;
+    --input: 0 0% 92%;
+    --ring: 142 76% 36%;
+    
+    /* Extended Palette - Light */
+    --gold: 45 93% 40%;
+    --warning: 38 92% 45%;
+    --success: 142 76% 36%;
+  }
+
   * {
     @apply border-border;
   }
@@ -40,6 +68,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   html {
@@ -163,6 +192,35 @@
       linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px),
       linear-gradient(90deg, hsl(var(--primary) / 0.03) 1px, transparent 1px);
     background-size: 32px 32px;
+  }
+
+  /* Animated Grid Background */
+  .bg-grid-animated {
+    background-image: 
+      linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    animation: grid-pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes grid-pulse {
+    0%, 100% { background-position: 0 0; opacity: 1; }
+    50% { background-position: 16px 16px; opacity: 0.6; }
+  }
+
+  /* Floating Particles */
+  .particle {
+    @apply absolute rounded-full pointer-events-none;
+    background: hsl(var(--primary) / 0.3);
+    animation: float var(--duration, 20s) ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-20px) translateX(10px); }
+    50% { transform: translateY(-10px) translateX(-10px); }
+    75% { transform: translateY(-30px) translateX(5px); }
   }
 
   /* Hover Lift Effect */

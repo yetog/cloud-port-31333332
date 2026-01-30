@@ -23,8 +23,9 @@
 
 ## 2. Color System (HSL)
 
-All colors are defined in `src/index.css` as CSS variables:
+All colors are defined in `src/index.css` as CSS variables.
 
+### Dark Theme (Default)
 ```css
 :root {
   /* Primary: Matrix Green */
@@ -50,6 +51,27 @@ All colors are defined in `src/index.css` as CSS variables:
   --destructive: 0 72% 51%;
 }
 ```
+
+### Light Theme
+```css
+:root.light {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --primary: 142 76% 36%; /* Darker for contrast */
+  --muted: 0 0% 92%;
+  --muted-foreground: 0 0% 40%;
+  --border: 142 76% 36% / 0.15;
+  --gold: 45 93% 40%;
+}
+```
+
+### Theme Toggle
+- Location: Sidebar (bottom area)
+- Icons: Sun (for light mode) / Moon (for dark mode)
+- Persisted: localStorage key `theme`
+- Context: `src/contexts/ThemeContext.tsx`
 
 ---
 
@@ -123,7 +145,47 @@ import { EquipmentSlot } from '@/components/rpg';
 
 ---
 
-## 4. Utility Classes
+## 4. New Components
+
+### Highlights Carousel
+Location: `src/components/Highlights.tsx`
+
+Auto-rotating carousel showcasing LinkedIn posts, achievements, and events.
+
+Features:
+- 5-second autoplay with pause on hover
+- Fade + slide transitions
+- Pagination dots
+- Ken Burns zoom on images
+
+### PageLoader
+Location: `src/components/PageLoader.tsx`
+
+Materia-style spinning diamond loader for page transitions.
+
+### PageTransition
+Location: `src/components/PageTransition.tsx`
+
+Fade wrapper for route changes with smooth opacity transitions.
+
+### FloatingParticles
+Location: `src/components/FloatingParticles.tsx`
+
+CSS-only floating particle effect for background ambiance.
+
+### ThemeToggle
+Location: `src/components/ThemeToggle.tsx`
+
+Toggle button for switching between dark/light themes.
+
+### SoundToggle
+Location: `src/components/SoundToggle.tsx`
+
+Toggle button for enabling/disabling UI sounds.
+
+---
+
+## 5. Utility Classes
 
 Defined in `src/index.css`:
 
@@ -135,15 +197,17 @@ Defined in `src/index.css`:
 | `.text-glow-strong` | Intense text glow effect |
 | `.hover-lift` | Interactive hover animation |
 | `.bg-grid` | Subtle grid background pattern |
+| `.bg-grid-animated` | Animated grid with pulsing effect |
 | `.progress-segmented` | RPG-style segmented progress bar |
 | `.focus-glow` | Focus ring with glow effect |
 | `.materia-slot` | Diamond-shaped indicator base |
 | `.stat-abbr` | Monospace abbreviation styling |
 | `.stat-value` | Monospace value styling |
+| `.particle` | Floating particle styling |
 
 ---
 
-## 5. Animations
+## 6. Animations
 
 Defined in `tailwind.config.ts`:
 
@@ -156,9 +220,16 @@ Defined in `tailwind.config.ts`:
 | `animate-shimmer` | Loading skeleton effect |
 | `animate-scale-up` | Emphasis scale animation |
 
+### CSS Animations (in index.css)
+
+| Animation | Usage |
+|-----------|-------|
+| `grid-pulse` | Animated grid background movement |
+| `float` | Floating particle motion |
+
 ---
 
-## 6. Box Shadows
+## 7. Box Shadows
 
 | Shadow | Usage |
 |--------|-------|
@@ -169,69 +240,114 @@ Defined in `tailwind.config.ts`:
 
 ---
 
-## 7. Accessibility
+## 8. Sound System
+
+### Context: `src/contexts/SoundContext.tsx`
+
+Uses Web Audio API to generate subtle UI feedback sounds.
+
+### Available Sounds
+- `playClick()` - Button/link clicks (800Hz, 50ms)
+- `playToggle()` - Toggle switches (600Hz + 900Hz, 80ms)
+- `playTransition()` - Page transitions (400Hz, 150ms)
+
+### Settings
+- Stored in localStorage key `sound-settings`
+- Default: enabled at 30% volume
+- Toggle in Sidebar
+
+---
+
+## 9. Icon Standards
+
+### Guidelines
+- **Library**: Lucide React only
+- **No emojis** in production UI
+- **Sizes**: 
+  - Small (inline): `h-4 w-4`
+  - Medium (buttons): `h-5 w-5`
+  - Large (features): `h-6 w-6`
+- **Color**: Use `text-primary` or `text-muted-foreground`
+
+### App Icon Mapping
+| App | Icon |
+|-----|------|
+| Sensei AI | `GraduationCap` |
+| Zen Reset | `Leaf` |
+| Chord Genesis | `Music` |
+| Wolf AI | `Bot` |
+| Voice Assistant | `Mic` |
+| Cloud LLM | `BrainCircuit` |
+| DJ Visualizer | `Headphones` |
+| FineLine | `PenLine` |
+| Game Hub | `Gamepad2` |
+| Sprite Gen | `Palette` |
+| Knowledge Base | `BookOpen` |
+
+---
+
+## 10. Accessibility
 
 - **Contrast Ratios**: All text meets WCAG AA (4.5:1 for body)
 - **Focus States**: Visible focus rings with glow effect
 - **Reduced Motion**: Respects `prefers-reduced-motion`
 - **Keyboard Navigation**: All interactive elements focusable
 - **Screen Readers**: Proper aria-labels on decorative elements
+- **Theme**: Respects user preference, persists choice
+- **Sound**: Respects user choice, default low volume
 
 ---
 
-## 8. Usage Examples
+## 11. Carousel Best Practices
 
-### Creating a Skills Section
-
+### Autoplay Settings
 ```tsx
-import { FF7Panel, SectionHeader, AttributeBar, MateriaIndicator } from '@/components/rpg';
+import Autoplay from 'embla-carousel-autoplay';
 
-<FF7Panel title="Skills" withCorners>
-  <div className="flex items-center justify-between mb-4">
-    <h4 className="text-sm uppercase tracking-wider text-muted-foreground">
-      Technical Skills
-    </h4>
-    <MateriaIndicator filled={4} size="sm" />
-  </div>
-  
-  <div className="space-y-3">
-    <AttributeBar abbr="AWS" label="Amazon Web Services" value={85} />
-    <AttributeBar abbr="K8S" label="Kubernetes" value={78} color="blue" />
-    <AttributeBar abbr="TER" label="Terraform" value={92} color="gold" />
-  </div>
-</FF7Panel>
+plugins={[
+  Autoplay({
+    delay: 5000,           // 5 seconds
+    stopOnInteraction: true,
+    stopOnMouseEnter: true,
+  }),
+]}
 ```
 
-### Creating a Hero with Effects
-
+### Pagination Dots
 ```tsx
-<div className="min-h-screen bg-grid relative">
-  <h1 className="text-7xl font-bold text-glow-strong">
-    Title Here
-  </h1>
-  
-  <button className="button-primary">
-    Get Started
-  </button>
-  
-  {/* Radial gradient overlay */}
-  <div 
-    className="absolute inset-0 -z-10"
-    style={{
-      background: 'radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.1) 0%, transparent 50%)'
-    }}
-  />
+<div className="flex justify-center gap-2 mb-6">
+  {Array.from({ length: count }).map((_, index) => (
+    <button
+      key={index}
+      onClick={() => scrollTo(index)}
+      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+        index === current 
+          ? 'w-6 bg-primary' 
+          : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+      }`}
+      aria-label={`Go to slide ${index + 1}`}
+    />
+  ))}
 </div>
 ```
 
 ---
 
-## 9. File Structure
+## 12. File Structure
 
 ```
 src/
 ├── index.css                    # Design tokens + utility classes
+├── contexts/
+│   ├── ThemeContext.tsx         # Theme state management
+│   └── SoundContext.tsx         # Sound settings management
 ├── components/
+│   ├── ThemeToggle.tsx          # Theme toggle button
+│   ├── SoundToggle.tsx          # Sound toggle button
+│   ├── PageLoader.tsx           # Loading spinner
+│   ├── PageTransition.tsx       # Route transition wrapper
+│   ├── FloatingParticles.tsx    # Background particles
+│   ├── Highlights.tsx           # Highlights carousel
 │   └── rpg/
 │       ├── index.ts             # Barrel export
 │       ├── FF7Panel.tsx         # Panel container
@@ -239,6 +355,19 @@ src/
 │       ├── MateriaIndicator.tsx # Skill level diamonds
 │       ├── AttributeBar.tsx     # RPG stat bars
 │       └── EquipmentSlot.tsx    # Skill/focus slots
+├── data/
+│   └── highlights.ts            # Highlights data
 └── styles/
     └── DESIGN_SYSTEM.md         # This documentation
 ```
+
+---
+
+## 13. Performance Considerations
+
+- **Animations**: CSS-only where possible (grid-pulse, float)
+- **Particles**: Limited to 12 elements with GPU-accelerated transforms
+- **Sound**: Web Audio API (no external files needed)
+- **Images**: Lazy loading on all carousel images
+- **Reduced Motion**: All animations respect system preference
+- **Theme Transition**: 300ms transition on body for smooth theme changes
