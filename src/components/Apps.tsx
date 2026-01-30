@@ -10,29 +10,35 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { FF7Panel, SectionHeader } from './rpg';
 
 const Apps = () => {
-  // Featured apps - show only the first 5 apps
   const featuredApps = apps.slice(0, 5);
 
   return (
     <section id="apps" className="py-20 md:py-28">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="section-title">Featured Apps</h2>
+          <h2 className="section-title text-glow">Featured Apps</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mb-8">
             I've created custom tools and platforms designed to enhance productivity, creativity, and digital workflows. These personal apps reflect my passion for automation, AI integration, and user-first design.
           </p>
           
           {/* View All Apps Button */}
           <div className="flex justify-center mb-12">
-            <Button asChild variant="outline" size="lg" className="group">
+            <Button 
+              asChild 
+              variant="outline" 
+              size="lg" 
+              className="group border-primary/40 hover:border-primary hover:bg-primary/10 text-foreground"
+            >
               <Link to="/apps" className="flex items-center">
                 View All Apps ({apps.length})
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>
+          
           <Carousel
             opts={{
               align: "start",
@@ -49,26 +55,24 @@ const Apps = () => {
                   className="basis-full md:basis-1/3 lg:basis-1/4 p-2"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div
-                    className="glass-panel p-5 flex flex-col h-full transition-all duration-500 opacity-100 transform-none"
-                  >
-                    <h3 className="text-lg font-bold mb-2">{app.title}</h3>
+                  <FF7Panel className="h-full hover-lift">
+                    <h3 className="text-lg font-bold mb-2 text-foreground">{app.title}</h3>
                     <p className="text-sm text-muted-foreground mb-4 flex-1">{app.description}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {app.tags.map(tag => (
                         <span
                           key={tag}
-                          className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary-foreground"
+                          className="text-xs px-2 py-1 rounded-full bg-primary/20 text-primary border border-primary/30"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <div className="flex gap-3 mt-auto pt-3">
+                    <div className="flex gap-3 mt-auto pt-3 border-t border-primary/20">
                       {app.appUrl && (
                         <a
                           href={app.appUrl}
-                          className="flex items-center text-xs text-primary hover:underline"
+                          className="flex items-center text-xs text-primary hover:text-primary/80 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -79,7 +83,7 @@ const Apps = () => {
                       {app.githubUrl && (
                         <a
                           href={app.githubUrl}
-                          className="flex items-center text-xs text-primary hover:underline"
+                          className="flex items-center text-xs text-primary hover:text-primary/80 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -90,7 +94,7 @@ const Apps = () => {
                       {app.storeUrl && (
                         <a
                           href={app.storeUrl}
-                          className="flex items-center text-xs text-primary hover:underline"
+                          className="flex items-center text-xs text-primary hover:text-primary/80 transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -99,13 +103,13 @@ const Apps = () => {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </FF7Panel>
                 </CarouselItem>
               ))}
             </CarouselContent>
             <div className="flex justify-center mt-6">
-              <CarouselPrevious className="static translate-y-0 mr-4" />
-              <CarouselNext className="static translate-y-0" />
+              <CarouselPrevious className="static translate-y-0 mr-4 border-primary/40 hover:border-primary hover:bg-primary/10" />
+              <CarouselNext className="static translate-y-0 border-primary/40 hover:border-primary hover:bg-primary/10" />
             </div>
           </Carousel>
         </div>
