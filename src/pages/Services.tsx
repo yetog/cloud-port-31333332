@@ -2,6 +2,7 @@ import { Check, ArrowRight } from 'lucide-react';
 import PageLayout from '@/components/PageLayout';
 import { FF7Panel, SectionHeader } from '@/components/rpg';
 import { services } from '@/data/services';
+import { partners } from '@/data/partners';
 
 const Services = () => {
   return (
@@ -37,11 +38,6 @@ const Services = () => {
                       <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                         {service.title}
                       </h3>
-                      {service.pricing && (
-                        <p className="text-sm text-primary/80 font-medium mt-1">
-                          {service.pricing}
-                        </p>
-                      )}
                     </div>
                   </div>
                   
@@ -59,7 +55,7 @@ const Services = () => {
                   </ul>
                   
                   <a 
-                    href="#contact" 
+                    href="/#contact" 
                     className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-medium text-sm group/btn"
                   >
                     {service.cta}
@@ -69,6 +65,45 @@ const Services = () => {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Partners & Affiliates Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <FF7Panel className="p-8" withCorners>
+            <SectionHeader>Partners & Affiliates</SectionHeader>
+            <p className="text-muted-foreground text-center mb-8">
+              Trusted partnerships that power exceptional solutions
+            </p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 items-center justify-items-center">
+              {partners.map((partner) => {
+                const Wrapper = partner.url ? 'a' : 'div';
+                const wrapperProps = partner.url ? { href: partner.url, target: '_blank', rel: 'noopener noreferrer' } : {};
+                
+                return (
+                  <Wrapper
+                    key={partner.id}
+                    {...wrapperProps}
+                    className="group flex flex-col items-center p-4 rounded-lg hover:bg-primary/10 transition-all cursor-pointer"
+                  >
+                    {/* Text-based placeholder until logos are added */}
+                    <div className="h-12 w-full flex items-center justify-center px-3 py-2 rounded bg-muted/50 group-hover:bg-primary/20 transition-colors">
+                      <span className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors text-center">
+                        {partner.name}
+                      </span>
+                    </div>
+                    {partner.code && (
+                      <span className="text-xs text-primary/70 mt-2 font-mono">
+                        Code: {partner.code}
+                      </span>
+                    )}
+                  </Wrapper>
+                );
+              })}
+            </div>
+          </FF7Panel>
         </div>
       </section>
 
