@@ -7,6 +7,14 @@
 
 ---
 
+## Related Documentation
+
+- `DESIGN_SYSTEM.md` - Visual design tokens, colors, components (this file)
+- `ARCHITECTURE.md` - Technical architecture, routing, file structure
+- `CHANGELOG.md` - Development history and session changes
+
+---
+
 ## 1. Design Philosophy
 
 ### Core Inspiration
