@@ -3,6 +3,14 @@
 
 ---
 
+## Related Documentation
+
+- `DESIGN_SYSTEM.md` - Visual design tokens, colors, components
+- `ARCHITECTURE.md` - Technical architecture (this file)
+- `CHANGELOG.md` - Development history and session changes
+
+---
+
 ## 1. PROJECT OVERVIEW
 
 ### Tech Stack
