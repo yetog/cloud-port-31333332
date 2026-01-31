@@ -23,7 +23,6 @@ export const services: Service[] = [
       'AI Infrastructure Setup',
       'LLM Deployment & Optimization',
     ],
-    pricing: 'Contact for quote',
     cta: 'Get AI Solutions',
   },
   {
@@ -38,7 +37,6 @@ export const services: Service[] = [
       'SSL & security certificates',
       '99.9% uptime guarantee',
     ],
-    pricing: 'Starting at $15/mo',
     cta: 'Start Hosting',
   },
   {
@@ -53,7 +51,6 @@ export const services: Service[] = [
       'SPF/DKIM/DMARC configuration',
       'Spam & security filtering',
     ],
-    pricing: 'Starting at $5/mo per user',
     cta: 'Setup Email',
   },
   {
@@ -68,7 +65,6 @@ export const services: Service[] = [
       'Infrastructure optimization',
       'Kubernetes & containerization',
     ],
-    pricing: 'Contact for quote',
     cta: 'Go Cloud',
   },
 ];
