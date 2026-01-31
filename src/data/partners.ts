@@ -2,9 +2,7 @@ export interface Partner {
   id: string;
   name: string;
   logo?: string;
-  url?: string;
-  code?: string;
-  type: 'partner' | 'affiliate';
+  url: string;
 }
 
 export const partners: Partner[] = [
@@ -12,45 +10,42 @@ export const partners: Partner[] = [
     id: 'ionos', 
     name: 'IONOS', 
     logo: '/partners/ionos.svg', 
-    type: 'partner' 
+    url: 'https://www.ionos.com'
   },
   { 
     id: 'aws', 
     name: 'AWS', 
     logo: '/partners/aws.svg', 
-    type: 'partner' 
+    url: 'https://aws.amazon.com'
   },
   { 
     id: 'elevenlabs', 
     name: 'ElevenLabs', 
     logo: '/partners/elevenlabs.svg', 
-    url: 'https://try.elevenlabs.io/4eohur6ossid', 
-    type: 'affiliate' 
+    url: 'https://elevenlabs.io'
   },
   { 
     id: 'lovable', 
     name: 'Lovable', 
     logo: '/partners/lovable.svg', 
-    type: 'partner' 
+    url: 'https://lovable.dev'
   },
   { 
     id: 'gamma', 
     name: 'Gamma', 
     logo: '/partners/gamma.svg', 
-    type: 'partner' 
+    url: 'https://gamma.app'
   },
   { 
     id: 'leonardo', 
     name: 'Leonardo AI', 
     logo: '/partners/leonardo.svg', 
-    type: 'partner' 
+    url: 'https://leonardo.ai'
   },
   { 
     id: 'oakcha', 
     name: 'Oakcha', 
     logo: '/partners/oakcha.svg', 
-    url: 'https://oakcha.com',
-    code: 'ISAYAH90460', 
-    type: 'affiliate' 
+    url: 'https://oakcha.com'
   },
 ];
